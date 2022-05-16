@@ -84,7 +84,7 @@ void displayPaint() {
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	VP = calculateVP();
-	lightDir = glm::vec3(8, 2, -4);
+	lightDir = glm::vec3(10, 12, -8);
 	glUniform3f(lightID, lightDir.x, lightDir.y, lightDir.z);
 	displayPaint();
 	glfwSwapBuffers(window);
@@ -94,7 +94,8 @@ void display() {
 
 int main() {
 	glInit();
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	float a = 0.7f;
+	glClearColor(a*0.991f, a*0.7f, a*0.5f, 0.0f);
 	initShaders();
 	loadTexture();
 	loadOBJ();

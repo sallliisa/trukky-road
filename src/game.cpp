@@ -144,7 +144,9 @@ class Player{
         float airTime = 0;
         bool onAir = false;
         void draw() {
-            model = glm::translate(glm::mat4(1.0f), glm::vec3(trugPosx, trugPosY, 25));
+			glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(trugPosx, trugPosY, 25));
+            glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), 3.14159f, glm::vec3(0, 1, 0));
+			model = translate * rotate;
 			glBindVertexArray(car_VertexArrayID);
 			MVP = VP * model;
 			glUniform1i(textureID, 2);
