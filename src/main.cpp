@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <glew.h>
 #include <GLFW/glfw3.h>
@@ -14,8 +15,9 @@ collision
  */
 float carmov = 0;
 float pinpo = 0.0f;
-
+bool game = true;
 std::vector<Car> car(1, Car());
+Player player;
 
 void renderCar(glm::mat4 model, GLuint varray_id){
 	glBindVertexArray(varray_id);
@@ -62,6 +64,7 @@ void displayPaint() {
 	// glDrawArrays(GL_TRIANGLES, 0, car_vertices.size());
 
 	handleCar();
+	player.handleTrug();
 	// model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f));
 	// MVP = VP * model;
 	// glUniform1i(textureID, 1);
@@ -81,7 +84,7 @@ void displayPaint() {
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	VP = calculateVP();
-	lightPos = glm::vec3(4, 4, 4);
+	lightPos = glm::vec3(0, 5, 7);
 	glUniform3f(lightID, lightPos.x, lightPos.y, lightPos.z);
 	displayPaint();
 	glfwSwapBuffers(window);
@@ -97,7 +100,7 @@ int main() {
 	loadOBJ();
 	initVAO();
 	while ((glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) 
-			&& (glfwWindowShouldClose(window) == 0))
+			&& (glfwWindowShouldClose(window) == 0) && game)
 		display();
 	glDeleteBuffers(1, &car_vertexbuffer);
 	glDeleteVertexArrays(1, &car_VertexArrayID);
