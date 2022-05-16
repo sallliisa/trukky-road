@@ -13,15 +13,14 @@ out vec3 lightDirection_cameraspace;
 uniform mat4 MVP;
 uniform mat4 V;
 uniform mat4 M;
-uniform vec3 lightPos_worldspace;
+uniform vec3 lightDir_worldspace;
 
 void main(){
 	gl_Position =  MVP * vec4(vertexPosition_modelspace, 1);
 	pos_worldspace = (M * vec4(vertexPosition_modelspace, 1)).xyz;
 	vec3 vertexPosition_cameraspace = (V * M * vec4(vertexPosition_modelspace, 1)).xyz;
 	eyeDirection_cameraspace = vec3(0, 0, 0) - vertexPosition_cameraspace;
-	vec3 lightPosition_cameraspace = (V * vec4(lightPos_worldspace, 1)).xyz;
-	lightDirection_cameraspace = lightPosition_cameraspace + eyeDirection_cameraspace;
+	lightDirection_cameraspace = mat3(V) * lightDir_worldspace;
 	normal_cameraspace = (V * M * vec4(vertexNormal_modelspace, 0)).xyz;
 	UV = vertexUV;
 }

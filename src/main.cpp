@@ -84,8 +84,8 @@ void displayPaint() {
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	VP = calculateVP();
-	lightPos = glm::vec3(0, 5, 7);
-	glUniform3f(lightID, lightPos.x, lightPos.y, lightPos.z);
+	lightDir = glm::vec3(8, 2, -4);
+	glUniform3f(lightID, lightDir.x, lightDir.y, lightDir.z);
 	displayPaint();
 	glfwSwapBuffers(window);
 	glfwPollEvents();

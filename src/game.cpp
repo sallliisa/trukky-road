@@ -18,7 +18,7 @@ GLuint  programID, matrixID, textureID, lightID,
 		car_VertexArrayID, tree_VertexArrayID, viewMatID, modelMatID;
 std::vector<glm::vec3> car_vertices, car_normals, tree_vertices, tree_normals;
 std::vector<glm::vec2> car_uvs, tree_uvs;
-glm::vec3 lightPos;
+glm::vec3 lightDir;
 glm::mat4 MVP, VP, model;
 float WORLD_SPEED = 0.2;
 float gravity = 7;
@@ -53,7 +53,7 @@ void initShaders() {
 	matrixID = glGetUniformLocation(programID, "MVP");
 	viewMatID = glGetUniformLocation(programID, "V");
 	modelMatID = glGetUniformLocation(programID, "M");
-	lightID = glGetUniformLocation(programID, "lightPos_worldspace");
+	lightID = glGetUniformLocation(programID, "lightDir_worldspace");
 	glUseProgram(programID);
 }
 
