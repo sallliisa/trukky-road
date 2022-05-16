@@ -21,7 +21,7 @@ std::vector<glm::vec2> car_uvs, tree_uvs;
 glm::vec3 lightPos;
 glm::mat4 MVP, VP, model;
 float WORLD_SPEED = 0.2;
-
+float gravity = 7;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
@@ -136,8 +136,52 @@ glm::mat4 calculateVP() {
 	return (glm::mat4) projection * view;
 }
 
+class Player{
+    public:
+        float trugPosx = 0, trugPosY = 0;
+        float jumpSpeed = 2;
+        float jumpSpeedBuffer = 0;
+        float airTime = 0;
+        bool onAir = false;
+        void draw() {
+            model = glm::translate(glm::mat4(1.0f), glm::vec3(trugPosx, trugPosY, 25));
+			glBindVertexArray(car_VertexArrayID);
+			MVP = VP * model;
+			glUniform1i(textureID, 2);
+			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
+			glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
+			glDrawArrays(GL_TRIANGLES, 0, car_vertices.size());
+        }
+        void handleTrug(){
+            // jump logic memakai konsep percepatan gravitasi
+            if(onAir){
+                airTime += 0.04;
+                trugPosY += jumpSpeedBuffer;
+                if(jumpSpeed > (-jumpSpeedBuffer) && trugPosY > 0){
+                    jumpSpeedBuffer = jumpSpeed - (gravity*airTime);
+                } 
+                else if(trugPosY <= 0) {
+                    onAir = false; 
+                    trugPosY = 0;
+                }
+                printf("trugPosY: %f\n", trugPosY);
+                printf("jumpSpeedBuffer: %f\n", jumpSpeedBuffer);
+                printf("airTime: %f\n", airTime);
+                printf(onAir ? "onAir\n" : "notOnAir\n");
+            }
+			draw();
+        }
+        void jump(){
+            if(!onAir){
+                airTime = 0;
+                onAir = true;
+                jumpSpeedBuffer = jumpSpeed;
+            }
+        }
+};
+
 class Car{
-	public:
+	public :
 		float x,y,z;
         GLint textid;
 		Car(){
@@ -156,6 +200,5 @@ class Car{
 		}
         void update(){
             z += WORLD_SPEED;
-            printf("%f\n", z);
         }
 };
