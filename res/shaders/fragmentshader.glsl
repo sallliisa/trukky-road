@@ -16,7 +16,7 @@ void main() {
 	float lightPower = 25.0f;
 
 	vec3 matDiffuseColor = texture(tex0Sampler, UV).rgb;
-	vec3 matAmbientColor = vec3(0.475, 0.455, 0.300) * matDiffuseColor;
+	vec3 matAmbientColor = vec3(0.180, 0.164, 0.066) * matDiffuseColor;
 	vec3 matSpecularColor = vec3(0.3, 0.3, 0.3);
 
 	vec3 n = normalize(normal_cameraspace);

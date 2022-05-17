@@ -14,12 +14,11 @@ load object optimization
 collision
  */
 float carmov = 0;
-float pinpo = 0.0f;
 bool game = true;
 std::vector<Car> car(1, Car());
 Player player;
 
-void renderCar(glm::mat4 model, GLuint varray_id){
+void renderCar(glm::mat4 model, GLuint varray_id) {
 	glBindVertexArray(varray_id);
 	MVP = VP * model;
 	glUniform1i(textureID, 2);
@@ -28,7 +27,7 @@ void renderCar(glm::mat4 model, GLuint varray_id){
 	glDrawArrays(GL_TRIANGLES, 0, car_vertices.size());
 }
 
-void handleCar(){
+void handleCar() {
     // std::vector<Obstacle>::iterator it = obstacles.begin();
     // for(int i = 0; i < obstacles.size();i++){
     //     if(obstacles[i].obsX > -10){
@@ -41,13 +40,12 @@ void handleCar(){
     //     }
 
     // }
-    for(auto it = car.begin(); it != car.end();){
-        if(it->z < 30){
-            it->draw();
-            it->update();
+    for (auto it = car.begin(); it != car.end();) {
+        if (it -> z < 30) {
+            it -> draw();
+            it -> update();
             ++it;
-        }
-        else{
+        } else {
             it = car.erase(it);
             car.insert(it, Car());
         }
@@ -94,8 +92,8 @@ void display() {
 
 int main() {
 	glInit();
-	float a = 0.7f;
-	glClearColor(a*0.991f, a*0.7f, a*0.5f, 0.0f);
+	float mult = 1.0f;
+	glClearColor(mult*0.904f, mult*0.815f, mult*0.328f, 1.0f);
 	initShaders();
 	loadTexture();
 	loadOBJ();

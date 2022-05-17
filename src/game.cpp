@@ -46,6 +46,7 @@ void glInit() {
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_FRAMEBUFFER_SRGB);
 }
 
 void initShaders() {
@@ -145,7 +146,7 @@ class Player{
         bool onAir = false;
         void draw() {
 			glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(trugPosx, trugPosY, 25));
-            glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), 3.14159f, glm::vec3(0, 1, 0));
+            glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0));
 			model = translate * rotate;
 			glBindVertexArray(car_VertexArrayID);
 			MVP = VP * model;
@@ -154,27 +155,25 @@ class Player{
 			glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 			glDrawArrays(GL_TRIANGLES, 0, car_vertices.size());
         }
+
         void handleTrug(){
             // jump logic memakai konsep percepatan gravitasi
             if(onAir){
                 airTime += 0.04;
                 trugPosY += jumpSpeedBuffer;
-                if(jumpSpeed > (-jumpSpeedBuffer) && trugPosY > 0){
+                if (jumpSpeed > (-jumpSpeedBuffer) && trugPosY > 0) {
                     jumpSpeedBuffer = jumpSpeed - (gravity*airTime);
                 } 
                 else if(trugPosY <= 0) {
                     onAir = false; 
                     trugPosY = 0;
                 }
-                printf("trugPosY: %f\n", trugPosY);
-                printf("jumpSpeedBuffer: %f\n", jumpSpeedBuffer);
-                printf("airTime: %f\n", airTime);
-                printf(onAir ? "onAir\n" : "notOnAir\n");
             }
 			draw();
         }
-        void jump(){
-            if(!onAir){
+
+        void jump() {
+            if (!onAir) {
                 airTime = 0;
                 onAir = true;
                 jumpSpeedBuffer = jumpSpeed;
@@ -182,25 +181,25 @@ class Player{
         }
 };
 
-class Car{
+class Car {
 	public :
 		float x,y,z;
-        GLint textid;
-		Car(){
-			x=0,y=0,z=0;
+        GLint texId;
+		Car() {
+			x = 0, y = 0, z = 0;
             x = -5 + (rand() % 3) * 5;
-            textid = rand() % 3;
+            texId = rand() % 3;
 		}
-		void draw(){
+		void draw() {
             model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
 			glBindVertexArray(car_VertexArrayID);
 			MVP = VP * model;
-			glUniform1i(textureID, textid);
+			glUniform1i(textureID, texId);
 			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 			glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 			glDrawArrays(GL_TRIANGLES, 0, car_vertices.size());
 		}
-        void update(){
+        void update() {
             z += WORLD_SPEED;
         }
 };
