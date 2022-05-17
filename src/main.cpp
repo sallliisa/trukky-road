@@ -41,7 +41,7 @@ void handleCar() {
 
     // }
     for (auto it = car.begin(); it != car.end();) {
-        if (it -> z < 30) {
+        if (it -> z < 40) {
             it -> draw();
             it -> update();
             ++it;
@@ -93,7 +93,7 @@ void display() {
 int main() {
 	glInit();
 	float mult = 1.0f;
-	glClearColor(mult*0.904f, mult*0.815f, mult*0.328f, 1.0f);
+	glClearColor(mult*0.973f, mult*0.314f, mult*0.072f, 1.0f);
 	initShaders();
 	loadTexture();
 	loadOBJ();

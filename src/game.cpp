@@ -15,7 +15,7 @@ GLFWwindow* window;
 GLuint  programID, matrixID, textureID, lightID,
 	    texture0, texture1, texture2, texture3, car_vertexbuffer, car_uvbuffer, car_normalbuffer, 
 		tree_vertexbuffer, tree_uvbuffer, tree_normalbuffer,
-		car_VertexArrayID, tree_VertexArrayID, viewMatID, modelMatID;
+		car_VertexArrayID, tree_VertexArrayID, viewMatID, modelMatID, fogColorID;
 std::vector<glm::vec3> car_vertices, car_normals, tree_vertices, tree_normals;
 std::vector<glm::vec2> car_uvs, tree_uvs;
 glm::vec3 lightDir;
@@ -145,7 +145,7 @@ class Player{
         float airTime = 0;
         bool onAir = false;
         void draw() {
-			glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(trugPosx, trugPosY, 25));
+			glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(trugPosx, trugPosY, 35));
             glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0));
 			model = translate * rotate;
 			glBindVertexArray(car_VertexArrayID);
@@ -164,7 +164,7 @@ class Player{
                 if (jumpSpeed > (-jumpSpeedBuffer) && trugPosY > 0) {
                     jumpSpeedBuffer = jumpSpeed - (gravity*airTime);
                 } 
-                else if(trugPosY <= 0) {
+                else if (trugPosY <= 0) {
                     onAir = false; 
                     trugPosY = 0;
                 }
