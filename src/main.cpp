@@ -15,7 +15,6 @@ collision
  */
 
 float carmov = 0;
-float pinpo = 0.0f;
 bool game = true;
 std::vector<Car> car(1, Car());
 Player player;
@@ -110,8 +109,8 @@ void display() {
 
 int main() {
 	glInit();
-	float a = 0.7f;
-	glClearColor(a*0.991f, a*0.7f, a*0.5f, 0.0f);
+	float mult = 1.0f;
+	glClearColor(mult*0.973f, mult*0.314f, mult*0.072f, 1.0f);
 	initShaders();
 	loadTexture();
 	loadOBJ();

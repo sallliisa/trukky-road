@@ -9,6 +9,7 @@ out vec3 pos_worldspace;
 out vec3 normal_cameraspace;
 out vec3 eyeDirection_cameraspace;
 out vec3 lightDirection_cameraspace;
+out vec3 mVertex;
 
 uniform mat4 MVP;
 uniform mat4 V;
@@ -22,5 +23,6 @@ void main(){
 	eyeDirection_cameraspace = vec3(0, 0, 0) - vertexPosition_cameraspace;
 	lightDirection_cameraspace = mat3(V) * lightDir_worldspace;
 	normal_cameraspace = (V * M * vec4(vertexNormal_modelspace, 0)).xyz;
+	mVertex = vertexPosition_modelspace, 1;
 	UV = vertexUV;
 }
