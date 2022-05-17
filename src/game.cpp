@@ -145,13 +145,8 @@ class Player{
         float airTime = 0;
         bool onAir = false;
         void draw() {
-<<<<<<< HEAD
 			glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(this->x, this->y, 25));
             glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), 3.14159f, glm::vec3(0, 1, 0));
-=======
-			glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(trugPosx, trugPosY, 35));
-            glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0));
->>>>>>> 172f0fda4532801edf4cdbcba564ba8a04612171
 			model = translate * rotate;
 			glBindVertexArray(car_VertexArrayID);
 			MVP = VP * model;
@@ -165,29 +160,18 @@ class Player{
             // jump logic memakai konsep percepatan gravitasi
             if(onAir){
                 airTime += 0.04;
-<<<<<<< HEAD
                 this->y += jumpSpeedBuffer;
                 if(jumpSpeed > (-jumpSpeedBuffer) && this->y > 0){
                     jumpSpeedBuffer = jumpSpeed - (gravity*airTime);
                 } 
                 else if(this->y <= 0) {
-=======
-                trugPosY += jumpSpeedBuffer;
-                if (jumpSpeed > (-jumpSpeedBuffer) && trugPosY > 0) {
-                    jumpSpeedBuffer = jumpSpeed - (gravity*airTime);
-                } 
-                else if (trugPosY <= 0) {
->>>>>>> 172f0fda4532801edf4cdbcba564ba8a04612171
                     onAir = false; 
                     this->y = 0;
                 }
-<<<<<<< HEAD
                 printf("thisy: %f\n", this->y);
                 printf("jumpSpeedBuffer: %f\n", jumpSpeedBuffer);
                 printf("airTime: %f\n", airTime);
                 printf(onAir ? "onAir\n" : "notOnAir\n");
-=======
->>>>>>> 172f0fda4532801edf4cdbcba564ba8a04612171
             }
 			draw();
         }
