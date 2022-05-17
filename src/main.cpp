@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <glew.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "game.h"
 #include "game.cpp"
