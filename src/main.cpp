@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <GL/glew.h>
+#include <glew.h>
 #include <GLFW/glfw3.h>
 #include "game.h"
 #include "game.cpp"
@@ -13,12 +13,36 @@ player
 load object optimization
 collision
  */
+
 float carmov = 0;
 bool game = true;
 std::vector<Car> car(1, Car());
 Player player;
 
-void renderCar(glm::mat4 model, GLuint varray_id) {
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
+	if(key == GLFW_KEY_UNKNOWN) return;
+    if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS){
+		if(player.x < 5){
+			player.x += 5;
+			printf("%d\n", player.x);
+		}	
+	}
+	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS){
+		if(player.x > -5){
+			player.x -= 5;
+			printf("%d\n", player.x);
+		}	
+	}
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
+		player.jump();
+	}
+}
+
+void youLose(){
+	game = false;
+}
+
+void renderCar(glm::mat4 model, GLuint varray_id){
 	glBindVertexArray(varray_id);
 	MVP = VP * model;
 	glUniform1i(textureID, 2);
@@ -27,25 +51,18 @@ void renderCar(glm::mat4 model, GLuint varray_id) {
 	glDrawArrays(GL_TRIANGLES, 0, car_vertices.size());
 }
 
-void handleCar() {
-    // std::vector<Obstacle>::iterator it = obstacles.begin();
-    // for(int i = 0; i < obstacles.size();i++){
-    //     if(obstacles[i].obsX > -10){
-    //         obstacles[i].draw();
-    //         obstacles[i].update();
-            
-    //     }
-    //     else{
-            
-    //     }
-
-    // }
-    for (auto it = car.begin(); it != car.end();) {
-        if (it -> z < 40) {
-            it -> draw();
-            it -> update();
+void handleCar(){
+    for(auto it = car.begin(); it != car.end();){
+        if((it->x != player.x && it->z < 30) || (it->x == player.x && it->z < 20.5)){
+            it->draw();
+            it->update();
             ++it;
-        } else {
+        } else if(it->z >= 20.5 && it->z < 30){
+			youLose();
+			printf("YOU LOSE");
+			return;
+		}
+        else{
             it = car.erase(it);
             car.insert(it, Car());
         }
@@ -59,7 +76,7 @@ void displayPaint() {
 	// glUniform1i(textureID, 0);
 	// glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 	// glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-	// glDrawArrays(GL_TRIANGLES, 0, car_vertices.size());
+	// glDrawArrays(GL_TRIANGLES, 0, car_vertices.size());s
 
 	handleCar();
 	player.handleTrug();
@@ -98,6 +115,7 @@ int main() {
 	loadTexture();
 	loadOBJ();
 	initVAO();
+	glfwSetKeyCallback(window, key_callback);
 	while ((glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) 
 			&& (glfwWindowShouldClose(window) == 0) && game)
 		display();
