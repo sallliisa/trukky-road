@@ -39,7 +39,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 
 void youLose(){
-	game = false;
+	// game = false;
 }
 
 void renderCar(glm::mat4 model, GLuint varray_id){

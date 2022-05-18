@@ -73,6 +73,7 @@ bool loadOBJ(const char * path, std::vector<glm::vec3> & out_vertices, std::vect
 	}
 
 	fclose(file);
+	printf("obj read success\n");
 	return true;
 }
 
