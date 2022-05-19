@@ -64,7 +64,7 @@ void loadTexture() {
 	texture0 = loadBMP("./res/tex/car_1.bmp");
 	texture1 = loadBMP("./res/tex/car_2.bmp");
 	texture2 = loadBMP("./res/tex/car_3.bmp");
-	texture3 = loadBMP("./res/tex/tree_1.bmp");
+	texture3 = loadBMP("./res/tex/plane.bmp");
 	texture4 = loadBMP("./res/tex/truck.bmp");
 	textureID = glGetUniformLocation(programID, "tex0Sampler");
 	glBindTextureUnit(0, texture0);
@@ -76,8 +76,8 @@ void loadTexture() {
 }
 
 void loadOBJ() {
-	bool car = loadOBJ("./res/obj/car_1.obj", car_vertices, car_uvs, car_normals);
-	bool tree = loadOBJ("./res/obj/tree_1.obj", tree_vertices, tree_uvs, tree_normals);
+	bool car = loadOBJ("./res/obj/car.obj", car_vertices, car_uvs, car_normals);
+	bool tree = loadOBJ("./res/obj/street.obj", tree_vertices, tree_uvs, tree_normals);
 	bool truck = loadOBJ("./res/obj/truck.obj", truck_vertices, truck_uvs, truck_normals);
 }
 
@@ -189,11 +189,10 @@ class Player{
 
         void handleTrug(){
             // jump logic memakai konsep percepatan gravitasi
+			// TODO : airtime berbanding terbalik terhadap world speed
             if(onAir){
 				jump2 = glfwGetTime();
 				deltaTime = jump2 - jump1;
-                // airTime += 0.05;
-                // if (jumpSpeed > (-jumpSpeedBuffer) && this -> y > 0) {
 				y = -16 * deltaTime * (deltaTime - 1);
                 // }
                 if (this->y < 0) {

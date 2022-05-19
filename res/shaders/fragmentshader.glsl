@@ -13,8 +13,8 @@ uniform sampler2D tex0Sampler;
 uniform mat4 MV;
 
 float getFogFactor(float d) {
-	const float fogMax = 40.0;
-	const float fogMin = 20.0;
+	const float fogMax = 70.0;
+	const float fogMin = 50.0;
 	if (d >= fogMax) return 1;
 	if (d <= fogMin) return 0;
 

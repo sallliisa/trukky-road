@@ -19,16 +19,16 @@ bool game = true;
 std::vector<Car> car(1, Car());
 Player player;
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if(key == GLFW_KEY_UNKNOWN) return;
     if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS){
-		if(player.x < 5){
+		if (player.x < 5) {
 			player.x += 5;
 			printf("%d\n", player.x);
 		}	
 	}
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS){
-		if(player.x > -5){
+		if (player.x > -5) {
 			player.x -= 5;
 			printf("%d\n", player.x);
 		}	
@@ -36,9 +36,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
 		player.jump();
 	}
+	if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
+		if (noclip == true) noclip = false;
+		else noclip = true;
+	}
 }
 
-void youLose(){
+void youLose() {
 	// game = false;
 }
 
@@ -59,11 +63,11 @@ void handleCar(){
             ++it;
         } else if (it -> z >= 20.5 && it -> z < 30 && !player.onAir) {
 			youLose();
-			printf("YOU LOSE");
+			// printf("YOU LOSE");
 			return;
 		}
         else {
-			WORLD_SPEED += 0.01;
+			WORLD_SPEED += 0.001;
             it = car.erase(it);
             car.insert(it, Car());
         }
@@ -90,7 +94,7 @@ void displayPaint() {
 
 	glBindVertexArray(tree_VertexArrayID);
 	glUniform1i(textureID, 3);
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f));
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
 	MVP = VP * model;
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
