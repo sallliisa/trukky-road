@@ -22,7 +22,8 @@ std::vector<glm::vec2> car_uvs, tree_uvs, truck_uvs;
 glm::vec3 lightDir;
 glm::mat4 MVP, VP, model;
 float WORLD_SPEED = 0.2;
-float gravity = 7;
+float jump1, jump2;
+float gravity = 10;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
@@ -170,7 +171,7 @@ glm::mat4 calculateVP() {
 class Player{
     public:
         float x = 0, y = 0;
-        float jumpSpeed = 2;
+        float jumpSpeed = 1;
         float jumpSpeedBuffer = 0;
         float airTime = 0;
         bool onAir = false;
@@ -189,14 +190,15 @@ class Player{
         void handleTrug(){
             // jump logic memakai konsep percepatan gravitasi
             if(onAir){
-                airTime += 0.04;
-                this->y += jumpSpeedBuffer;
-                if(jumpSpeed > (-jumpSpeedBuffer) && this->y > 0){
-                    jumpSpeedBuffer = jumpSpeed - (gravity*airTime);
-                } 
-                else if(this->y <= 0) {
+				jump2 = glfwGetTime();
+				deltaTime = jump2 - jump1;
+                // airTime += 0.05;
+                // if (jumpSpeed > (-jumpSpeedBuffer) && this -> y > 0) {
+				y = -16 * deltaTime * (deltaTime - 1);
+                // }
+                if (this->y < 0) {
                     onAir = false; 
-                    this->y = 0;
+                    this -> y = 0;
                 }
                 printf("thisy: %f\n", this->y);
                 printf("jumpSpeedBuffer: %f\n", jumpSpeedBuffer);
@@ -208,6 +210,7 @@ class Player{
 
         void jump() {
             if (!onAir) {
+				jump1 = glfwGetTime();
                 airTime = 0;
                 onAir = true;
                 jumpSpeedBuffer = jumpSpeed;

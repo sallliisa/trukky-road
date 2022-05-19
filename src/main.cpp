@@ -53,16 +53,17 @@ void renderCar(glm::mat4 model, GLuint varray_id){
 
 void handleCar(){
     for(auto it = car.begin(); it != car.end();){
-        if((it->x != player.x && it->z < 30) || (it->x == player.x && it->z < 20.5)){
+        if ((it -> x != player.x && it -> z < 30) || (it -> x == player.x && it -> z < 20.5)) {
             it->draw();
             it->update();
             ++it;
-        } else if(it->z >= 20.5 && it->z < 30){
+        } else if (it -> z >= 20.5 && it -> z < 30 && !player.onAir) {
 			youLose();
 			printf("YOU LOSE");
 			return;
 		}
-        else{
+        else {
+			WORLD_SPEED += 0.01;
             it = car.erase(it);
             car.insert(it, Car());
         }

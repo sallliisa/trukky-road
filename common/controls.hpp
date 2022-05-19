@@ -12,14 +12,15 @@ float
     verticalA = 0.0f, 
     initFov = 45.0f, 
     movSpeed = 3.0f, 
-    mouseSens = 0.05f;
+    mouseSens = 0.05f,
+    deltaTime;
 int wWidth, wHeight;
 
 void getMatrices(GLFWwindow* window) {
     static double lastTime = glfwGetTime();
     double currentTime = glfwGetTime();
     glfwGetWindowSize(window, &wWidth, &wHeight);
-    float deltaTime = float(currentTime - lastTime);
+    deltaTime = float(currentTime - lastTime);
 
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
