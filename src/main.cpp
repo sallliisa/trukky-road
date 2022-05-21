@@ -46,7 +46,7 @@ void youLose() {
 	// game = false;
 }
 
-void renderCar(glm::mat4 model, GLuint varray_id){
+void renderCar(glm::mat4 model, GLuint varray_id) {
 	glBindVertexArray(varray_id);
 	MVP = VP * model;
 	glUniform1i(textureID, 2);
@@ -57,11 +57,11 @@ void renderCar(glm::mat4 model, GLuint varray_id){
 
 void handleCar(){
     for(auto it = car.begin(); it != car.end();){
-        if ((it -> x != player.x && it -> z < 30) || (it -> x == player.x && it -> z < 20.5)) {
+        if ((it -> x != player.x && it -> z < 10) || (it -> x == player.x && ((it -> z < -5.5 && !player.onAir) || player.onAir))) {
             it->draw();
             it->update();
             ++it;
-        } else if (it -> z >= 20.5 && it -> z < 30 && !player.onAir) {
+        } else if (it -> z >= -5.5 && it -> z < 10 && !player.onAir) {
 			youLose();
 			// printf("YOU LOSE");
 			return;

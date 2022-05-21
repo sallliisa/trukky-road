@@ -21,7 +21,7 @@ std::vector<glm::vec3> car_vertices, car_normals, tree_vertices, tree_normals, t
 std::vector<glm::vec2> car_uvs, tree_uvs, truck_uvs;
 glm::vec3 lightDir;
 glm::mat4 MVP, VP, model;
-float WORLD_SPEED = 0.2;
+float WORLD_SPEED = 0.4;
 float jump1, jump2;
 float gravity = 10;
 
@@ -176,7 +176,7 @@ class Player{
         float airTime = 0;
         bool onAir = false;
         void draw() {
-			glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(this->x, this->y, 25));
+			glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(this->x, this->y, 0));
             glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), 3.14159f, glm::vec3(0, 1, 0));
 			model = translate * rotate;
 			glBindVertexArray(truck_VertexArrayID);
@@ -222,7 +222,7 @@ class Car {
 		float x,y,z;
         GLint texId;
 		Car() {
-			x = 0, y = 0, z = 0;
+			x = 0, y = 0, z = -50;
             x = -5 + (rand() % 3) * 5;
             texId = rand() % 3;
 		}
