@@ -53,7 +53,7 @@ void getMatrices(GLFWwindow* window) {
     glm::vec3 fixedPos = glm::vec3(11.721495, 10.549835, 14.880783);
     glm::vec3 fixedEye = glm::vec3(11.238375, 10.118466, 14.118866);
     glm::vec fixedUp = glm::vec3(-0.231290, 0.902176, -0.364120);
-    ProjectionMatrix = glm::perspective(glm::radians(fov), (float)wWidth/wHeight, 0.1f, 100.0f);
+    ProjectionMatrix = glm::perspective(glm::radians(fov), (float)wWidth/wHeight, 0.1f, 170.0f);
     glm::vec3 posdir = position + direction;
     if (noclip == true) ViewMatrix = glm::lookAt(position, position + direction, up);
     else ViewMatrix = glm::lookAt(fixedPos, fixedEye, fixedUp);

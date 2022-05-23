@@ -5,19 +5,20 @@
 #include <GLFW/glfw3.h>
 #include "game.h"
 #include "game.cpp"
-
+#include <vector>
 using namespace glm;
-
 /* TODO: 
 player
 load object optimization
 collision
  */
 
-float carmov = 0;
 bool game = true;
 std::vector<Car> car(1, Car());
+std::vector<Environment> environment(1, Environment(30));
+
 Player player;
+
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if(key == GLFW_KEY_UNKNOWN) return;
@@ -46,6 +47,12 @@ void youLose() {
 	// game = false;
 }
 
+void init_environment(){
+	environment.push_back(Environment(-39.6));
+	environment.push_back(Environment(-109.2));
+	environment.push_back(Environment(-178.8));
+}
+
 void renderCar(glm::mat4 model, GLuint varray_id) {
 	glBindVertexArray(varray_id);
 	MVP = VP * model;
@@ -67,9 +74,25 @@ void handleCar(){
 			return;
 		}
         else {
-			WORLD_SPEED += 0.001;
+			CAR_SPEED += 0.001;
             it = car.erase(it);
             car.insert(it, Car());
+        }
+    }
+}
+
+void handleWorld(){
+	for(auto it = environment.begin(); it != environment.end();){
+        if (it -> z < 99.6) {
+            it->draw();
+            it->update();
+			if(it->z == 10) printf("duar");
+			printf("%f\n", it->z);
+            ++it;
+        } 
+        else {
+            it = environment.erase(it);
+            environment.insert(it, Environment(-178.8));
         }
     }
 }
@@ -78,30 +101,7 @@ void displayPaint() {
 	// Interactive objects
 	handleCar();
 	player.handleTrug();
-	
-	// Static objects
-	// Road
-	glBindVertexArray(road_VertexArrayID);
-	glUniform1i(textureID, 3);
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -20.0f));
-	MVP = VP * model;
-	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
-	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-	glDrawArrays(GL_TRIANGLES, 0, road_vertices.size());
-	
-	// Sideroad
-	glBindVertexArray(sideroad_VertexArrayID);
-	glUniform1i(textureID, 5);
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(-12.0f, 0.0f, 14.0f));
-	MVP = VP * model;
-	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
-	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-	glDrawArrays(GL_TRIANGLES, 0, sideroad_vertices.size());
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(12.0f, 0.0f, 14.0f));
-	MVP = VP * model;
-	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
-	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-	glDrawArrays(GL_TRIANGLES, 0, sideroad_vertices.size());
+	handleWorld();
 }
 
 void display() {
@@ -112,7 +112,6 @@ void display() {
 	displayPaint();
 	glfwSwapBuffers(window);
 	glfwPollEvents();
-	carmov += 0.01;
 }
 
 int main() {
@@ -123,6 +122,7 @@ int main() {
 	loadTexture();
 	loadOBJ();
 	initVAO();
+	init_environment();
 	glfwSetKeyCallback(window, key_callback);
 	while ((glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) 
 			&& (glfwWindowShouldClose(window) == 0) && game)

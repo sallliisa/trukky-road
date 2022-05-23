@@ -29,6 +29,7 @@ std::vector<glm::vec2> car_uvs,
 glm::vec3 lightDir;
 glm::mat4 MVP, VP, model;
 float WORLD_SPEED = 0.4;
+float CAR_SPEED  = 0.6;
 float jump1, jump2, move1, move2;
 int wheel_direction = 0;
 float gravity = 10;
@@ -265,7 +266,7 @@ class Player{
 					playerLane = -1;
 					onLane = true;
 					this -> x = 6.5;
-				} else if ((this -> x > -0.1 && this -> x < 0.1) && playerLane != 0) {
+				} else if ((this -> x > -0.2 && this -> x < 0.2) && playerLane != 0) {
 					playerLane = 0;
 					onLane = true;
 					this -> x = 0;
@@ -297,7 +298,7 @@ class Car {
 		float x,y,z;
         GLint texId;
 		Car() {
-			x = 0, y = 0, z = -50;
+			x = 0, y = 0, z = -60;
             x = -6.5 + (rand() % 3) * 6.5;
             texId = rand() % 3;
 		}
@@ -311,6 +312,42 @@ class Car {
 			glDrawArrays(GL_TRIANGLES, 0, car_vertices.size());
 		}
         void update() {
-            z += WORLD_SPEED;
+            z += CAR_SPEED;
         }
+};
+
+class Environment{
+	public:
+		float z;
+		Environment(float m_z){
+			this -> z = m_z;
+		}
+		void draw(){
+			// Static objects
+			// Road
+			glBindVertexArray(road_VertexArrayID);
+			glUniform1i(textureID, 3);
+			model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, this->z-34));
+			MVP = VP * model;
+			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
+			glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
+			glDrawArrays(GL_TRIANGLES, 0, road_vertices.size());
+			
+			// Sideroad
+			glBindVertexArray(sideroad_VertexArrayID);
+			glUniform1i(textureID, 5);
+			model = glm::translate(glm::mat4(1.0f), glm::vec3(-12.0f, 0.0f, this->z));
+			MVP = VP * model;
+			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
+			glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
+			glDrawArrays(GL_TRIANGLES, 0, sideroad_vertices.size());
+			model = glm::translate(glm::mat4(1.0f), glm::vec3(12.0f, 0.0f, this->z));
+			MVP = VP * model;
+			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
+			glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
+			glDrawArrays(GL_TRIANGLES, 0, sideroad_vertices.size());
+		}
+		void update(){
+			z += WORLD_SPEED;
+		}
 };
