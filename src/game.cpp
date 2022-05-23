@@ -266,7 +266,7 @@ class Player{
 					playerLane = -1;
 					onLane = true;
 					this -> x = 6.5;
-				} else if ((this -> x > -0.1 && this -> x < 0.1) && playerLane != 0) {
+				} else if ((this -> x > -0.2 && this -> x < 0.2) && playerLane != 0) {
 					playerLane = 0;
 					onLane = true;
 					this -> x = 0;
