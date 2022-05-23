@@ -12,13 +12,20 @@
 
 GLFWwindow* window;
 
-GLuint  programID, matrixID, textureID, lightID,
-	    texture0, texture1, texture2, texture3, texture4, car_vertexbuffer, car_uvbuffer, car_normalbuffer, 
-		tree_vertexbuffer, tree_uvbuffer, tree_normalbuffer,
-		car_VertexArrayID, tree_VertexArrayID, truck_VertexArrayID, viewMatID, modelMatID, fogColorID,
-		truck_vertexbuffer, truck_uvbuffer, truck_normalbuffer;
-std::vector<glm::vec3> car_vertices, car_normals, tree_vertices, tree_normals, truck_vertices, truck_normals;
-std::vector<glm::vec2> car_uvs, tree_uvs, truck_uvs;
+GLuint  programID, matrixID, textureID, lightID, viewMatID, modelMatID, fogColorID,
+	    texture0, texture1, texture2, texture3, texture4, texture5, 
+		car_vertexbuffer, car_uvbuffer, car_normalbuffer, car_VertexArrayID,
+		road_vertexbuffer, road_uvbuffer, road_normalbuffer, road_VertexArrayID,
+		truck_vertexbuffer, truck_uvbuffer, truck_normalbuffer, truck_VertexArrayID,
+		sideroad_vertexbuffer, sideroad_uvbuffer, sideroad_normalbuffer, sideroad_VertexArrayID;
+std::vector<glm::vec3> car_vertices, car_normals, 
+					   road_vertices, road_normals,
+					   truck_vertices, truck_normals,
+					   sideroad_vertices, sideroad_normals;
+std::vector<glm::vec2> car_uvs,
+					   road_uvs,
+					   truck_uvs,
+					   sideroad_uvs;
 glm::vec3 lightDir;
 glm::mat4 MVP, VP, model;
 float WORLD_SPEED = 0.4;
@@ -67,22 +74,27 @@ void loadTexture() {
 	texture2 = loadBMP("./res/tex/car_3.bmp");
 	texture3 = loadBMP("./res/tex/road.bmp");
 	texture4 = loadBMP("./res/tex/truck.bmp");
+	texture5 = loadBMP("./res/tex/sideroad.bmp");
 	textureID = glGetUniformLocation(programID, "tex0Sampler");
 	glBindTextureUnit(0, texture0);
 	glBindTextureUnit(1, texture1);
 	glBindTextureUnit(2, texture2);
 	glBindTextureUnit(3, texture3);
 	glBindTextureUnit(4, texture4);
+	glBindTextureUnit(5, texture5);
 	printf("loaded all texture\n");
 }
 
 void loadOBJ() {
 	bool car = loadOBJ("./res/obj/car.obj", car_vertices, car_uvs, car_normals);
-	bool tree = loadOBJ("./res/obj/road.obj", tree_vertices, tree_uvs, tree_normals);
+	bool road = loadOBJ("./res/obj/road.obj", road_vertices, road_uvs, road_normals);
 	bool truck = loadOBJ("./res/obj/truck.obj", truck_vertices, truck_uvs, truck_normals);
+	bool sideroad = loadOBJ("./res/obj/sideroad.obj", sideroad_vertices, sideroad_uvs, sideroad_normals);
 }
 
 void initVAO() {
+	// Buffer generation
+	// Car
 	glGenBuffers(1, &car_vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, car_vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, car_vertices.size() * sizeof(glm::vec3), &car_vertices[0], GL_STATIC_DRAW);
@@ -95,18 +107,20 @@ void initVAO() {
 	glBindBuffer(GL_ARRAY_BUFFER, car_normalbuffer);
 	glBufferData(GL_ARRAY_BUFFER, car_normals.size() * sizeof(glm::vec3), &car_normals[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &tree_vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, tree_vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, tree_vertices.size() * sizeof(glm::vec3), &tree_vertices[0], GL_STATIC_DRAW);
+	// Road
+	glGenBuffers(1, &road_vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, road_vertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, road_vertices.size() * sizeof(glm::vec3), &road_vertices[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &tree_uvbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, tree_uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, tree_uvs.size() * sizeof(glm::vec2), &tree_uvs[0], GL_STATIC_DRAW);
+	glGenBuffers(1, &road_uvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, road_uvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, road_uvs.size() * sizeof(glm::vec2), &road_uvs[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &tree_normalbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, tree_normalbuffer);
-	glBufferData(GL_ARRAY_BUFFER, tree_normals.size() * sizeof(glm::vec3), &tree_normals[0], GL_STATIC_DRAW);
+	glGenBuffers(1, &road_normalbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, road_normalbuffer);
+	glBufferData(GL_ARRAY_BUFFER, road_normals.size() * sizeof(glm::vec3), &road_normals[0], GL_STATIC_DRAW);
 
+	// Truck
 	glGenBuffers(1, &truck_vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, truck_vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, truck_vertices.size() * sizeof(glm::vec3), &truck_vertices[0], GL_STATIC_DRAW);
@@ -119,11 +133,27 @@ void initVAO() {
 	glBindBuffer(GL_ARRAY_BUFFER, truck_normalbuffer);
 	glBufferData(GL_ARRAY_BUFFER, truck_normals.size() * sizeof(glm::vec3), &truck_normals[0], GL_STATIC_DRAW);
 
+	// Sideroad
+	glGenBuffers(1, &sideroad_vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, sideroad_vertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sideroad_vertices.size() * sizeof(glm::vec3), &sideroad_vertices[0], GL_STATIC_DRAW);
 
+	glGenBuffers(1, &sideroad_uvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, sideroad_uvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sideroad_uvs.size() * sizeof(glm::vec2), &sideroad_uvs[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &sideroad_normalbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, sideroad_normalbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sideroad_normals.size() * sizeof(glm::vec3), &sideroad_normals[0], GL_STATIC_DRAW);
+
+	// Gen VAO
 	glGenVertexArrays(1, &car_VertexArrayID);
-	glGenVertexArrays(1, &tree_VertexArrayID);
+	glGenVertexArrays(1, &road_VertexArrayID);
 	glGenVertexArrays(1, &truck_VertexArrayID);
+	glGenVertexArrays(1, &sideroad_VertexArrayID);
 
+	// VAO Binding
+	// Car
 	glBindVertexArray(car_VertexArrayID);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -135,17 +165,19 @@ void initVAO() {
 	glBindBuffer(GL_ARRAY_BUFFER, car_normalbuffer);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
 
-	glBindVertexArray(tree_VertexArrayID);
+	// Road
+	glBindVertexArray(road_VertexArrayID);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
-	glBindBuffer(GL_ARRAY_BUFFER, tree_vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, road_vertexbuffer);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
-	glBindBuffer(GL_ARRAY_BUFFER, tree_uvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, road_uvbuffer);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0);
-	glBindBuffer(GL_ARRAY_BUFFER, tree_normalbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, road_normalbuffer);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
 
+	// Truck
 	glBindVertexArray(truck_VertexArrayID);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -155,6 +187,18 @@ void initVAO() {
 	glBindBuffer(GL_ARRAY_BUFFER, truck_uvbuffer);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0);
 	glBindBuffer(GL_ARRAY_BUFFER, truck_normalbuffer);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
+
+	// Sideroad
+	glBindVertexArray(sideroad_VertexArrayID);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, sideroad_vertexbuffer);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
+	glBindBuffer(GL_ARRAY_BUFFER, sideroad_uvbuffer);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0);
+	glBindBuffer(GL_ARRAY_BUFFER, sideroad_normalbuffer);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
 
 	glBindVertexArray(0);
@@ -224,7 +268,7 @@ class Car {
         GLint texId;
 		Car() {
 			x = 0, y = 0, z = -50;
-            x = -5 + (rand() % 3) * 5;
+            x = -6.5 + (rand() % 3) * 6.5;
             texId = rand() % 3;
 		}
 		void draw() {

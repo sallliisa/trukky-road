@@ -22,14 +22,14 @@ Player player;
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if(key == GLFW_KEY_UNKNOWN) return;
     if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS){
-		if (player.x < 5) {
-			player.x += 5;
+		if (player.x < 6.5) {
+			player.x += 6.5;
 			printf("%d\n", player.x);
 		}	
 	}
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS){
-		if (player.x > -5) {
-			player.x -= 5;
+		if (player.x > -6.5) {
+			player.x -= 6.5;
 			printf("%d\n", player.x);
 		}	
 	}
@@ -75,30 +75,34 @@ void handleCar(){
 }
 
 void displayPaint() {
-	// glBindVertexArray(car_VertexArrayID);
-	// model = glm::mat4(1.0f);
-	// MVP = VP * model;
-	// glUniform1i(textureID, 0);
-	// glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
-	// glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-	// glDrawArrays(GL_TRIANGLES, 0, car_vertices.size());s
-
+	// Interactive objects
 	handleCar();
 	player.handleTrug();
-	// model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f));
-	// MVP = VP * model;
-	// glUniform1i(textureID, 1);
-	// glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
-	// glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-	// glDrawArrays(GL_TRIANGLES, 0, car_vertices.size());
-
-	glBindVertexArray(tree_VertexArrayID);
+	
+	// Static objects
+	// Road
+	glBindVertexArray(road_VertexArrayID);
 	glUniform1i(textureID, 3);
 	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -25.0f));
 	MVP = VP * model;
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-	glDrawArrays(GL_TRIANGLES, 0, tree_vertices.size());
+	glDrawArrays(GL_TRIANGLES, 0, road_vertices.size());
+	
+	// Sideroad
+	glBindVertexArray(sideroad_VertexArrayID);
+	glUniform1i(textureID, 5);
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-11.0f, 0.0f, 9.0f));
+	MVP = VP * model;
+	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
+	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
+	glDrawArrays(GL_TRIANGLES, 0, sideroad_vertices.size());
+
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(11.0f, 0.0f, 9.0f));
+	MVP = VP * model;
+	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
+	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
+	glDrawArrays(GL_TRIANGLES, 0, sideroad_vertices.size());
 }
 
 void display() {
@@ -126,8 +130,8 @@ int main() {
 		display();
 	glDeleteBuffers(1, &car_vertexbuffer);
 	glDeleteVertexArrays(1, &car_VertexArrayID);
-	glDeleteBuffers(1, &tree_vertexbuffer);
-	glDeleteVertexArrays(1, &tree_VertexArrayID);
+	glDeleteBuffers(1, &road_vertexbuffer);
+	glDeleteVertexArrays(1, &road_VertexArrayID);
 	glDeleteProgram(programID);
 	glDeleteTextures(1, &texture0);
 	glDeleteTextures(1, &texture1);
