@@ -83,7 +83,7 @@ void displayPaint() {
 	// Road
 	glBindVertexArray(road_VertexArrayID);
 	glUniform1i(textureID, 3);
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -25.0f));
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -20.0f));
 	MVP = VP * model;
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
@@ -92,13 +92,12 @@ void displayPaint() {
 	// Sideroad
 	glBindVertexArray(sideroad_VertexArrayID);
 	glUniform1i(textureID, 5);
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(-11.0f, 0.0f, 9.0f));
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-11.0f, 0.0f, 14.0f));
 	MVP = VP * model;
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 	glDrawArrays(GL_TRIANGLES, 0, sideroad_vertices.size());
-
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(11.0f, 0.0f, 9.0f));
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(11.0f, 0.0f, 14.0f));
 	MVP = VP * model;
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
