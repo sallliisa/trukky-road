@@ -28,8 +28,8 @@ std::vector<glm::vec2> car_uvs,
 					   sideroad_uvs;
 glm::vec3 lightDir;
 glm::mat4 MVP, VP, model;
-float WORLD_SPEED = 0.4;
-float CAR_SPEED  = 0.6;
+float WORLD_SPEED = 1.0;
+float CAR_SPEED  = 1.5;
 float jump1, jump2, move1, move2;
 int wheel_direction = 0, frame = 0;
 float gravity = 10;
