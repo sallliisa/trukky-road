@@ -94,7 +94,7 @@ void displayPaint() {
 
 	glBindVertexArray(tree_VertexArrayID);
 	glUniform1i(textureID, 3);
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -25.0f));
 	MVP = VP * model;
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);

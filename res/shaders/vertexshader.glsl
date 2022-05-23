@@ -10,19 +10,30 @@ out vec3 normal_cameraspace;
 out vec3 eyeDirection_cameraspace;
 out vec3 lightDirection_cameraspace;
 out vec3 mVertex;
+out float alpha;
 
 uniform mat4 MVP;
 uniform mat4 V;
 uniform mat4 M;
 uniform vec3 lightDir_worldspace;
 
-void main(){
+float getFogFactor(float d) {
+	const float fogMax = 70.0;
+	const float fogMin = 50.0;
+	if (d >= fogMax) return 1;
+	if (d <= fogMin) return 0;
+
+	return 1 - (fogMax - d) / (fogMax - fogMin);
+}
+
+void main() {
 	gl_Position =  MVP * vec4(vertexPosition_modelspace, 1);
 	pos_worldspace = (M * vec4(vertexPosition_modelspace, 1)).xyz;
 	vec3 vertexPosition_cameraspace = (V * M * vec4(vertexPosition_modelspace, 1)).xyz;
 	eyeDirection_cameraspace = vec3(0, 0, 0) - vertexPosition_cameraspace;
 	lightDirection_cameraspace = mat3(V) * lightDir_worldspace;
 	normal_cameraspace = (V * M * vec4(vertexNormal_modelspace, 0)).xyz;
-	mVertex = vertexPosition_modelspace, 1;
+	// float d = distance(eyeDirection_cameraspace, vertexPosition_modelspace);
+	// alpha = getFogFactor(d);
 	UV = vertexUV;
 }

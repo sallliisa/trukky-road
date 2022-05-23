@@ -5,7 +5,7 @@ in vec3 pos_worldspace;
 in vec3 normal_cameraspace;
 in vec3 eyeDirection_cameraspace;
 in vec3 lightDirection_cameraspace;
-in vec3 mVertex;
+in float alpha;
 
 out vec3 color;
 
@@ -27,7 +27,7 @@ void main() {
 
 	vec3 matDiffuseColor = texture(tex0Sampler, UV).rgb;
 	vec3 matAmbientColor = vec3(0.194, 0.062, 0.014) * matDiffuseColor;
-	vec3 matSpecularColor = vec3(0.3, 0.3, 0.3);
+	vec3 matSpecularColor = vec3(0.6, 0.6, 0.6);
 
 	vec3 fogColor = vec3(0.973, 0.314, 0.072);
 
@@ -38,7 +38,5 @@ void main() {
 	vec3 R = reflect(-l, n);
 	float cosAlpha = clamp(dot(E, R), 0, 1);
 	vec3 fragColor = matAmbientColor + matDiffuseColor * lightColor * lightPower * cosTheta / 36 + matSpecularColor * lightColor * lightPower * pow(cosAlpha, 5) / 36;
-	float d = distance(eyeDirection_cameraspace, mVertex);
-	float alpha = getFogFactor(d);
-	color = mix(fragColor, fogColor, alpha);
+	color = fragColor;
 }
