@@ -222,6 +222,7 @@ class Player{
         float airTime = 0;
         bool onAir = false;
 		bool onLane = true;
+		int playerLane = 0;
         void draw() {
 			glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(this->x, this->y, 0));
             glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), 3.14159f, glm::vec3(0, 1, 0));
@@ -250,21 +251,24 @@ class Player{
                 printf("airTime: %f\n", airTime);
                 printf(onAir ? "onAir\n" : "notOnAir\n");
             }
+			printf("truck x = %f\n", this -> x);
 			if (!onLane) {
 				// printf("not on lane");
 				move2 = glfwGetTime();
 				deltaTime = move2 - move1;
 				x += wheel_direction * ((1 * deltaTime) + (0.5 * 1 * deltaTime * deltaTime));
-				printf("x incr = %f\n", x);
 				if (this->x < -6.5) {
+					playerLane = -1;
 					onLane = true;
 					this -> x = -6.5;
-				// } if ((this -> x != 0) && (this -> x > -0.1) || (this -> x < 0.1)) {
-				// 	onLane = true;
-				// 	this -> x = 0;
-				} if (this -> x > 6.5) {
+				} else if (this -> x > 6.5) {
+					playerLane = -1;
 					onLane = true;
 					this -> x = 6.5;
+				} else if ((this -> x > -0.1 && this -> x < 0.1) && playerLane != 0) {
+					playerLane = 0;
+					onLane = true;
+					this -> x = 0;
 				}
 			}
 			draw();
