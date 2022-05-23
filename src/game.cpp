@@ -220,6 +220,7 @@ class Player{
         float jumpSpeedBuffer = 0;
         float airTime = 0;
         bool onAir = false;
+		bool onLane = true;
         void draw() {
 			glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(this->x, this->y, 0));
             glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), 3.14159f, glm::vec3(0, 1, 0));
