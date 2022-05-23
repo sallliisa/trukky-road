@@ -48,9 +48,12 @@ void youLose() {
 }
 
 void init_environment(){
-	environment.push_back(Environment(-39.6));
-	environment.push_back(Environment(-109.2));
-	environment.push_back(Environment(-178.8));
+	// environment.push_back(Environment(-39.6));
+	// environment.push_back(Environment(-109.2));
+	// environment.push_back(Environment(-178.8));
+	environment.push_back(Environment(-40.0));
+	environment.push_back(Environment(-110.0));
+	environment.push_back(Environment(-180.0));
 }
 
 void renderCar(glm::mat4 model, GLuint varray_id) {
@@ -73,8 +76,9 @@ void handleCar(){
 			// printf("YOU LOSE");
 			return;
 		} else {
-			printf("sampe nigga");
-			CAR_SPEED += 0.001;
+			// printf("sampe nigga");
+			CAR_SPEED += 0.01;
+			// CAR_SPEED = std::clamp(CAR_SPEED, 0.0f, 1.5f);
             car.erase(it);
 			// break;
 			// it = car.begin();
@@ -96,8 +100,12 @@ void handleWorld(){
             ++it;
         } 
         else {
+			WORLD_SPEED += 0.01;
+			WORLD_SPEED = std::clamp(WORLD_SPEED, 0.0f, 1.0f);
+			printf("WS = %f | CS = %f\n", WORLD_SPEED, CAR_SPEED);
             it = environment.erase(it);
-            environment.insert(it, Environment(-178.8));
+            // environment.insert(it, Environment(-178.8));
+			environment.insert(it, Environment(-180.0));
         }
     }
 }
