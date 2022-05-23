@@ -25,13 +25,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS){
 		if (player.x < 6.5) {
 			player.move(1);
-			printf("%d\n", player.x);
+			// printf("%d\n", player.x);
 		}	
 	}
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS){
 		if (player.x > -6.5) {
 			player.move(-1);
-			printf("%d\n", player.x);
+			// printf("%d\n", player.x);
 		}	
 	}
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
@@ -64,7 +64,7 @@ void renderCar(glm::mat4 model, GLuint varray_id) {
 
 void handleCar(){
     for(auto it = car.begin(); it != car.end();){
-        if ((it -> x != player.x && it -> z < 10) || (it -> x == player.x && ((it -> z < -5.5 && !player.onAir) || player.onAir))) {
+        if (((it -> x != player.x && it -> z < 10) || (it -> x == player.x && ((it -> z < -5.5 && !player.onAir) || player.onAir)))) {
             it->draw();
             it->update();
             ++it;
@@ -72,13 +72,18 @@ void handleCar(){
 			youLose();
 			// printf("YOU LOSE");
 			return;
-		}
-        else {
+		} else {
+			printf("sampe nigga");
 			CAR_SPEED += 0.001;
-            it = car.erase(it);
-            car.insert(it, Car());
+            car.erase(it);
+			// break;
+			// it = car.begin();
+            // car.insert(it, Car());
         }
     }
+	if (frame % 30 == 0) {
+		car.push_back(Car());
+	}
 }
 
 void handleWorld(){
@@ -87,7 +92,7 @@ void handleWorld(){
             it->draw();
             it->update();
 			if(it->z == 10) printf("duar");
-			printf("%f\n", it->z);
+			// printf("%f\n", it->z);
             ++it;
         } 
         else {
@@ -112,6 +117,9 @@ void display() {
 	displayPaint();
 	glfwSwapBuffers(window);
 	glfwPollEvents();
+	// printf("%d\n", frame % 100);
+	frame++;
+	frame = frame % 500;
 }
 
 int main() {

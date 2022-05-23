@@ -31,7 +31,7 @@ glm::mat4 MVP, VP, model;
 float WORLD_SPEED = 0.4;
 float CAR_SPEED  = 0.6;
 float jump1, jump2, move1, move2;
-int wheel_direction = 0;
+int wheel_direction = 0, frame = 0;
 float gravity = 10;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -252,7 +252,7 @@ class Player{
                 printf("airTime: %f\n", airTime);
                 printf(onAir ? "onAir\n" : "notOnAir\n");
             }
-			printf("truck x = %f\n", this -> x);
+			// printf("truck x = %f\n", this -> x);
 			if (!onLane) {
 				// printf("not on lane");
 				move2 = glfwGetTime();
@@ -298,7 +298,7 @@ class Car {
 		float x,y,z;
         GLint texId;
 		Car() {
-			x = 0, y = 0, z = -60;
+			x = 0, y = 0, z = -180;
             x = -6.5 + (rand() % 3) * 6.5;
             texId = rand() % 3;
 		}

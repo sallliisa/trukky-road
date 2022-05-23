@@ -50,13 +50,14 @@ void getMatrices(GLFWwindow* window) {
     }
 
     float fov = initFov;
-    glm::vec3 fixedPos = glm::vec3(11.721495, 10.549835, 14.880783);
-    glm::vec3 fixedEye = glm::vec3(11.238375, 10.118466, 14.118866);
-    glm::vec fixedUp = glm::vec3(-0.231290, 0.902176, -0.364120);
+    glm::vec3 fixedPos = glm::vec3(11.799197, 11.006008, 15.324377);
+    glm::vec3 fixedEye = glm::vec3(11.327559, 10.560489, 14.563411);
+    glm::vec fixedUp = glm::vec3(-0.235005, 0.895272, -0.378497);
     ProjectionMatrix = glm::perspective(glm::radians(fov), (float)wWidth/wHeight, 0.1f, 170.0f);
     glm::vec3 posdir = position + direction;
     if (noclip == true) ViewMatrix = glm::lookAt(position, position + direction, up);
     else ViewMatrix = glm::lookAt(fixedPos, fixedEye, fixedUp);
+    // printf("position = {%f, %f, %f}, eye = {%f, %f, %f}, up = {%f, %f, %f}\n", position.x, position.y, position.z, posdir.x, posdir.y, posdir.z, up.x, up.y, up.z);
     
     lastTime = currentTime;
 }
