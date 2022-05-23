@@ -29,7 +29,8 @@ std::vector<glm::vec2> car_uvs,
 glm::vec3 lightDir;
 glm::mat4 MVP, VP, model;
 float WORLD_SPEED = 0.4;
-float jump1, jump2;
+float jump1, jump2, move1, move2;
+int wheel_direction = 0;
 float gravity = 10;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -236,11 +237,10 @@ class Player{
         void handleTrug(){
             // jump logic memakai konsep percepatan gravitasi
 			// TODO : airtime berbanding terbalik terhadap world speed
-            if(onAir){
+            if(onAir) {
 				jump2 = glfwGetTime();
 				deltaTime = jump2 - jump1;
 				y = -16 * deltaTime * (deltaTime - 1);
-                // }
                 if (this->y < 0) {
                     onAir = false; 
                     this -> y = 0;
@@ -250,6 +250,23 @@ class Player{
                 printf("airTime: %f\n", airTime);
                 printf(onAir ? "onAir\n" : "notOnAir\n");
             }
+			if (!onLane) {
+				// printf("not on lane");
+				move2 = glfwGetTime();
+				deltaTime = move2 - move1;
+				x += wheel_direction * ((1 * deltaTime) + (0.5 * 1 * deltaTime * deltaTime));
+				printf("x incr = %f\n", x);
+				if (this->x < -6.5) {
+					onLane = true;
+					this -> x = -6.5;
+				// } if ((this -> x != 0) && (this -> x > -0.1) || (this -> x < 0.1)) {
+				// 	onLane = true;
+				// 	this -> x = 0;
+				} if (this -> x > 6.5) {
+					onLane = true;
+					this -> x = 6.5;
+				}
+			}
 			draw();
         }
 
@@ -261,6 +278,14 @@ class Player{
                 jumpSpeedBuffer = jumpSpeed;
             }
         }
+
+		void move(int direction) {
+			if (onLane) {
+				onLane = false;
+				move1 = glfwGetTime();
+				wheel_direction = direction;
+			}
+		}
 };
 
 class Car {

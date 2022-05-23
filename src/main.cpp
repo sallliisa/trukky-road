@@ -23,13 +23,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if(key == GLFW_KEY_UNKNOWN) return;
     if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS){
 		if (player.x < 6.5) {
-			player.x += 6.5;
+			player.move(1);
 			printf("%d\n", player.x);
 		}	
 	}
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS){
 		if (player.x > -6.5) {
-			player.x -= 6.5;
+			player.move(-1);
 			printf("%d\n", player.x);
 		}	
 	}
