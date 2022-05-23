@@ -30,7 +30,8 @@ glm::vec3 lightDir;
 glm::mat4 MVP, VP, model;
 float WORLD_SPEED = 0.4;
 float CAR_SPEED  = 0.6;
-float jump1, jump2;
+float jump1, jump2, move1, move2;
+int wheel_direction = 0;
 float gravity = 10;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -222,6 +223,7 @@ class Player{
         float airTime = 0;
         bool onAir = false;
 		bool onLane = true;
+		int playerLane = 0;
         void draw() {
 			glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(this->x, this->y, 0));
             glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), 3.14159f, glm::vec3(0, 1, 0));
@@ -237,11 +239,10 @@ class Player{
         void handleTrug(){
             // jump logic memakai konsep percepatan gravitasi
 			// TODO : airtime berbanding terbalik terhadap world speed
-            if(onAir){
+            if(onAir) {
 				jump2 = glfwGetTime();
 				deltaTime = jump2 - jump1;
 				y = -16 * deltaTime * (deltaTime - 1);
-                // }
                 if (this->y < 0) {
                     onAir = false; 
                     this -> y = 0;
@@ -251,6 +252,26 @@ class Player{
                 printf("airTime: %f\n", airTime);
                 printf(onAir ? "onAir\n" : "notOnAir\n");
             }
+			printf("truck x = %f\n", this -> x);
+			if (!onLane) {
+				// printf("not on lane");
+				move2 = glfwGetTime();
+				deltaTime = move2 - move1;
+				x += wheel_direction * ((1 * deltaTime) + (0.5 * 1 * deltaTime * deltaTime));
+				if (this->x < -6.5) {
+					playerLane = -1;
+					onLane = true;
+					this -> x = -6.5;
+				} else if (this -> x > 6.5) {
+					playerLane = -1;
+					onLane = true;
+					this -> x = 6.5;
+				} else if ((this -> x > -0.1 && this -> x < 0.1) && playerLane != 0) {
+					playerLane = 0;
+					onLane = true;
+					this -> x = 0;
+				}
+			}
 			draw();
         }
 
@@ -262,6 +283,14 @@ class Player{
                 jumpSpeedBuffer = jumpSpeed;
             }
         }
+
+		void move(int direction) {
+			if (onLane) {
+				onLane = false;
+				move1 = glfwGetTime();
+				wheel_direction = direction;
+			}
+		}
 };
 
 class Car {
