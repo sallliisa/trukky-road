@@ -15,11 +15,12 @@ GLuint  programID, matrixID, textureID, lightID, viewMatID, modelMatID;
 
 glm::vec3 lightDir;
 glm::mat4 MVP, VP, model;
-float WORLD_SPEED = 0.4;
-float CAR_SPEED  = 0.6;
+float WORLD_SPEED = 1.0f;
+float CAR_SPEED  = 0.5f;
 float jump1, jump2, move1, move2;
 int wheel_direction = 0, frame = 0;
 float gravity = 10;
+float worldspinc = 0.01, carspinc = 0.001;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
@@ -186,7 +187,9 @@ class Car {
             texId = rand() % 6;
 		}
 		void draw() {
-            model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
+            glm::mat4 tmat = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
+			glm::mat4 rmat = glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0));
+			model = tmat * rmat;
 			glBindVertexArray(car_VertexArrayID);
 			MVP = VP * model;
 			glUniform1i(textureID, texId);
@@ -249,31 +252,35 @@ class Tree{
 			case 0:
 				glBindVertexArray(tree1_VertexArrayID);
 				glUniform1i(textureID, 9);
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x, 1.0f, this->z));
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x, 0.0f, this->z));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, tree1_vertices.size());
 
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(x, 1.0f, this->z));
+				glBindVertexArray(tree1_VertexArrayID);
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(x, 0.0f, this->z));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, tree1_vertices.size());
 
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x-4, 1.0f, this->z-2));
+				glBindVertexArray(tree1_VertexArrayID);
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x-4, 0.0f, this->z-2));
+				MVP = VP * model;
+				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
+				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
+				glDrawArrays(GL_TRIANGLES, 0, tree1_vertices.size());
+				
+				glBindVertexArray(tree1_VertexArrayID);
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(x+4, 0.0f, this->z-2));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, tree1_vertices.size());
 
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(x+4, 1.0f, this->z-2));
-				MVP = VP * model;
-				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
-				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-				glDrawArrays(GL_TRIANGLES, 0, tree1_vertices.size());
-
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x-8, 1.0f, this->z-4));
+				glBindVertexArray(tree1_VertexArrayID);
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x-8, 0.0f, this->z-4));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
@@ -283,68 +290,76 @@ class Tree{
 			case 1:
 				glBindVertexArray(tree2_VertexArrayID);
 				glUniform1i(textureID, 10);
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x, 1.0f, this->z));
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x, 0.0f, this->z));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, tree2_vertices.size());
 
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(x, 1.0f, this->z));
+				glBindVertexArray(tree2_VertexArrayID);
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(x, 0.0f, this->z));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, tree2_vertices.size());
 
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x-4, 1.0f, this->z-2));
+				glBindVertexArray(tree2_VertexArrayID);
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x-4, 0.0f, this->z-2));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-				glDrawArrays(GL_TRIANGLES, 0, tree1_vertices.size());
+				glDrawArrays(GL_TRIANGLES, 0, tree2_vertices.size());
 
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(x+4, 1.0f, this->z-2));
+				glBindVertexArray(tree2_VertexArrayID);
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(x+4, 0.0f, this->z-2));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-				glDrawArrays(GL_TRIANGLES, 0, tree1_vertices.size());
+				glDrawArrays(GL_TRIANGLES, 0, tree2_vertices.size());
 
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x-8, 1.0f, this->z-4));
+				glBindVertexArray(tree2_VertexArrayID);
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x-8, 0.0f, this->z-4));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-				glDrawArrays(GL_TRIANGLES, 0, tree1_vertices.size());
+				glDrawArrays(GL_TRIANGLES, 0, tree2_vertices.size());
 				break;
 			case 2:
 				glBindVertexArray(tree3_VertexArrayID);
 				glUniform1i(textureID, 11);
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x, 1.0f, this->z));
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x, 0.0f, this->z));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, tree3_vertices.size());
 
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(x, 1.0f, this->z));
+				glBindVertexArray(tree3_VertexArrayID);
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(x, 0.0f, this->z));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, tree3_vertices.size());
 
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x-4, 1.0f, this->z-2));
+				glBindVertexArray(tree3_VertexArrayID);
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x-4, 0.0f, this->z-2));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-				glDrawArrays(GL_TRIANGLES, 0, tree1_vertices.size());
+				glDrawArrays(GL_TRIANGLES, 0, tree3_vertices.size());
 
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(x+4, 1.0f, this->z-2));
+				glBindVertexArray(tree3_VertexArrayID);
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(x+4, 0.0f, this->z-2));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-				glDrawArrays(GL_TRIANGLES, 0, tree1_vertices.size());
+				glDrawArrays(GL_TRIANGLES, 0, tree3_vertices.size());
 
-				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x-8, 1.0f, this->z-4));
+				glBindVertexArray(tree3_VertexArrayID);
+				model = glm::translate(glm::mat4(1.0f), glm::vec3(-x-8, 0.0f, this->z-4));
 				MVP = VP * model;
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
-				glDrawArrays(GL_TRIANGLES, 0, tree1_vertices.size());
+				glDrawArrays(GL_TRIANGLES, 0, tree3_vertices.size());
 				break;
 			default:
 				break;

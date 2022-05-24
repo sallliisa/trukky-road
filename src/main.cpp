@@ -15,7 +15,7 @@ collision
 bool game = true;
 std::vector<Car> car(1, Car());
 std::vector<Environment> environment(1, Environment(30));
-std::vector<Tree> tree(1, Tree(12, -180));
+std::vector<Tree> tree(1, Tree(100, -180));
 Player player;
 
 
@@ -39,6 +39,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
 		if (noclip == true) noclip = false;
 		else noclip = true;
+	}
+	if (key == GLFW_KEY_F2 && action == GLFW_PRESS) {
+		CAR_SPEED = 0.0f;
+		WORLD_SPEED = 0.0f;
+		worldspinc = 0.0f;
+		carspinc = 0.0f;
 	}
 }
 
@@ -73,7 +79,7 @@ void handleCar(){
 			return;
 		} else {
 			// printf("sampe nigga");
-			CAR_SPEED += 0.001;
+			CAR_SPEED += carspinc;
 			// CAR_SPEED = std::clamp(CAR_SPEED, 0.0f, 1.5f);
             car.erase(it);
 			// break;
@@ -97,7 +103,8 @@ void handleWorld(){
 			// printf("drew environment at %f\n", it -> z);
         } 
         else {
-			WORLD_SPEED += 0.01;
+			
+			WORLD_SPEED += worldspinc;
 			WORLD_SPEED = std::clamp(WORLD_SPEED, 0.0f, 1.0f);
 			// printf("WS = %f | CS = %f\n", WORLD_SPEED, CAR_SPEED);
             it = environment.erase(it);
@@ -123,8 +130,8 @@ void handleTree(){
             // tree.insert(it, Tree(-178.8));
         }
     }
-	if (frame % 15 == 0) {
-		tree.push_back(Tree(12, -180));
+	if (frame % 8 == 0) {
+		tree.push_back(Tree(14, -180));
 	}
 }
 
