@@ -15,7 +15,7 @@ collision
 bool game = true;
 std::vector<Car> car(1, Car());
 std::vector<Environment> environment(1, Environment(30));
-std::vector<Tree> tree(1, Tree(100, -180));
+std::vector<Tree> tree(1, Tree(14, -180));
 Player player;
 
 
@@ -130,7 +130,7 @@ void handleTree(){
             // tree.insert(it, Tree(-178.8));
         }
     }
-	if (frame % 8 == 0) {
+	if (frame % 5 == 0) {
 		tree.push_back(Tree(14, -180));
 	}
 }
