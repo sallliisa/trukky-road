@@ -20,7 +20,7 @@ float CAR_SPEED  = 0.5f;
 float jump1, jump2, move1, move2;
 int wheel_direction = 0, frame = 0;
 float gravity = 10;
-float worldspinc = 0.01, carspinc = 0.001;
+float carspinc = 0.001;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
@@ -121,8 +121,6 @@ class Player{
         }
 
         void handleTrug(){
-            // jump logic memakai konsep percepatan gravitasi
-			// TODO : airtime berbanding terbalik terhadap world speed
             if(onAir) {
 				jump2 = glfwGetTime();
 				deltaTime = jump2 - jump1;
@@ -131,14 +129,8 @@ class Player{
                     onAir = false; 
                     this -> y = 0;
                 }
-                // printf("thisy: %f\n", this->y);
-                // printf("jumpSpeedBuffer: %f\n", jumpSpeedBuffer);
-                // printf("airTime: %f\n", airTime);
-                // printf(onAir ? "onAir\n" : "notOnAir\n");
             }
-			// printf("truck x = %f\n", this -> x);
 			if (!onLane) {
-				// printf("not on lane");
 				move2 = glfwGetTime();
 				deltaTime = move2 - move1;
 				x += wheel_direction * ((1 * deltaTime) + (0.5 * 1 * deltaTime * deltaTime));
@@ -285,8 +277,8 @@ class Tree{
 				glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, tree1_vertices.size());
-
 				break;
+
 			case 1:
 				glBindVertexArray(tree2_VertexArrayID);
 				glUniform1i(textureID, 10);
@@ -324,6 +316,7 @@ class Tree{
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, tree2_vertices.size());
 				break;
+
 			case 2:
 				glBindVertexArray(tree3_VertexArrayID);
 				glUniform1i(textureID, 11);
@@ -361,6 +354,7 @@ class Tree{
 				glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, tree3_vertices.size());
 				break;
+				
 			default:
 				break;
 			}

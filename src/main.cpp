@@ -6,11 +6,6 @@
 #include "game.h"
 #include "game.cpp"
 using namespace glm;
-/* TODO: 
-player
-load object optimization
-collision
- */
 
 bool game = true;
 std::vector<Car> car(1, Car());
@@ -24,13 +19,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS){
 		if (player.x < 6.5) {
 			player.move(1);
-			// printf("%d\n", player.x);
 		}	
 	}
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS){
 		if (player.x > -6.5) {
 			player.move(-1);
-			// printf("%d\n", player.x);
 		}	
 	}
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
@@ -40,12 +33,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		if (noclip == true) noclip = false;
 		else noclip = true;
 	}
-	if (key == GLFW_KEY_F2 && action == GLFW_PRESS) {
-		CAR_SPEED = 0.0f;
-		WORLD_SPEED = 0.0f;
-		worldspinc = 0.0f;
-		carspinc = 0.0f;
-	}
 }
 
 void youLose() {
@@ -53,6 +40,8 @@ void youLose() {
 }
 
 void init_environment(){
+	lightDir = glm::vec3(10, 12, -8);
+	glUniform3f(lightID, lightDir.x, lightDir.y, lightDir.z);
 	environment.push_back(Environment(-40.0));
 	environment.push_back(Environment(-110.0));
 	environment.push_back(Environment(-180.0));
@@ -75,16 +64,10 @@ void handleCar(){
             ++it;
         } else if (it -> z >= -5.5 && it -> z < 10 && !player.onAir) {
 			youLose();
-			// printf("YOU LOSE");
 			return;
 		} else {
-			// printf("sampe nigga");
 			CAR_SPEED += carspinc;
-			// CAR_SPEED = std::clamp(CAR_SPEED, 0.0f, 1.5f);
             car.erase(it);
-			// break;
-			// it = car.begin();
-            // car.insert(it, Car());
         }
     }
 	if (frame % 20 == 0) {
@@ -97,18 +80,10 @@ void handleWorld(){
         if (it -> z < 100) {
             it->draw();
             it->update();
-			// if(it->z == 10) printf("duar");
-			// printf("%f\n", it->z);
             ++it;
-			// printf("drew environment at %f\n", it -> z);
         } 
         else {
-			
-			WORLD_SPEED += worldspinc;
-			WORLD_SPEED = std::clamp(WORLD_SPEED, 0.0f, 1.0f);
-			// printf("WS = %f | CS = %f\n", WORLD_SPEED, CAR_SPEED);
             it = environment.erase(it);
-            // environment.insert(it, Environment(-178.8));
 			environment.insert(it, Environment(-180.0));
         }
     }
@@ -119,15 +94,10 @@ void handleTree(){
         if (it -> z < 99.6) {
             it->draw();
             it->update();
-			// if(it->z == 10) printf("duar");
-			// printf("%f\n", it->z);
             ++it;
-			// printf("drew tree at %f\n", it -> z);
         } 
         else {
-			// printf("WS = %f | CS = %f\n", WORLD_SPEED, CAR_SPEED);
             tree.erase(it);
-            // tree.insert(it, Tree(-178.8));
         }
     }
 	if (frame % 5 == 0) {
@@ -136,30 +106,35 @@ void handleTree(){
 }
 
 void displayPaint() {
-	// Interactive objects
-	handleCar();
-	player.handleTrug();
+	handleCar(); // Obstacles
+	player.handleTrug(); // Player
+	// Environment
 	handleWorld();
 	handleTree();
+
+	// Ground
+	glBindVertexArray(ground_VertexArrayID);
+	glUniform1i(textureID, 12);
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.1f, 0.0f));
+	MVP = VP * model;
+	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
+	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
+	glDrawArrays(GL_TRIANGLES, 0, ground_vertices.size());
 }
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	VP = calculateVP();
-	lightDir = glm::vec3(10, 12, -8);
-	glUniform3f(lightID, lightDir.x, lightDir.y, lightDir.z);
 	displayPaint();
 	glfwSwapBuffers(window);
 	glfwPollEvents();
-	// printf("%d\n", frame % 100);
 	frame++;
 	frame = frame % 500;
 }
 
 int main() {
 	glInit();
-	float mult = 1.0f;
-	glClearColor(mult*0.973f, mult*0.314f, mult*0.072f, 1.0f);
+	glClearColor(0.973f, 0.314f, 0.072f, 1.0f);
 	initShaders();
 	loadTexture();
 	loadOBJ();

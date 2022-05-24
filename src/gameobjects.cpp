@@ -6,14 +6,15 @@
 #include "../common/texture.hpp"
 #include "../common/objloader.hpp"
 
-GLuint  texture0, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8, texture9, texture10, texture11,
+GLuint  texture0, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8, texture9, texture10, texture11, texture12,
 		car_vertexbuffer, car_uvbuffer, car_normalbuffer, car_VertexArrayID,
 		road_vertexbuffer, road_uvbuffer, road_normalbuffer, road_VertexArrayID,
 		truck_vertexbuffer, truck_uvbuffer, truck_normalbuffer, truck_VertexArrayID,
 		sideroad_vertexbuffer, sideroad_uvbuffer, sideroad_normalbuffer, sideroad_VertexArrayID,
 		tree1_vertexbuffer, tree1_uvbuffer, tree1_normalbuffer, tree1_VertexArrayID,
 		tree2_vertexbuffer, tree2_uvbuffer, tree2_normalbuffer, tree2_VertexArrayID,
-		tree3_vertexbuffer, tree3_uvbuffer, tree3_normalbuffer, tree3_VertexArrayID;
+		tree3_vertexbuffer, tree3_uvbuffer, tree3_normalbuffer, tree3_VertexArrayID,
+		ground_vertexbuffer, ground_uvbuffer, ground_normalbuffer, ground_VertexArrayID;
 
 std::vector<glm::vec3> car_vertices, car_normals, 
 					   road_vertices, road_normals,
@@ -21,7 +22,8 @@ std::vector<glm::vec3> car_vertices, car_normals,
 					   sideroad_vertices, sideroad_normals,
 					   tree1_vertices, tree1_normals,
 					   tree2_vertices, tree2_normals,
-					   tree3_vertices, tree3_normals;
+					   tree3_vertices, tree3_normals,
+					   ground_vertices, ground_normals;
 
 std::vector<glm::vec2> car_uvs,
 					   road_uvs,
@@ -29,7 +31,8 @@ std::vector<glm::vec2> car_uvs,
 					   sideroad_uvs,
 					   tree1_uvs,
 					   tree2_uvs,
-					   tree3_uvs;
+					   tree3_uvs,
+					   ground_uvs;
 
 void loadTexture() {
 	texture0 = loadBMP("./res/tex/car_1.bmp");
@@ -44,6 +47,7 @@ void loadTexture() {
 	texture9 = loadBMP("./res/tex/tree1.bmp");
 	texture10 = loadBMP("./res/tex/tree2.bmp");
 	texture11 = loadBMP("./res/tex/tree3.bmp");
+	texture12 = loadBMP("./res/tex/ground.bmp");
 	glBindTextureUnit(0, texture0);
 	glBindTextureUnit(1, texture1);
 	glBindTextureUnit(2, texture2);
@@ -56,6 +60,7 @@ void loadTexture() {
     glBindTextureUnit(9, texture9);
     glBindTextureUnit(10, texture10);
     glBindTextureUnit(11, texture11);
+	glBindTextureUnit(12, texture12);
 	printf("loaded all texture\n");
 }
 
@@ -67,6 +72,7 @@ void loadOBJ() {
 	bool tree1 = loadOBJ("./res/obj/tree1.obj", tree1_vertices, tree1_uvs, tree1_normals);
 	bool tree2 = loadOBJ("./res/obj/tree2.obj", tree2_vertices, tree2_uvs, tree2_normals);
 	bool tree3 = loadOBJ("./res/obj/tree3.obj", tree3_vertices, tree3_uvs, tree3_normals);
+	bool ground = loadOBJ("./res/obj/ground.obj", ground_vertices, ground_uvs, ground_normals);
 }
 
 void initVAO() {
@@ -162,6 +168,19 @@ void initVAO() {
 	glBindBuffer(GL_ARRAY_BUFFER, tree3_normalbuffer);
 	glBufferData(GL_ARRAY_BUFFER, tree3_normals.size() * sizeof(glm::vec3), &tree3_normals[0], GL_STATIC_DRAW);
 
+	// Ground
+	glGenBuffers(1, &ground_vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, ground_vertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, ground_vertices.size() * sizeof(glm::vec3), &ground_vertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &ground_uvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, ground_uvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, ground_uvs.size() * sizeof(glm::vec2), &ground_uvs[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &ground_normalbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, ground_normalbuffer);
+	glBufferData(GL_ARRAY_BUFFER, ground_normals.size() * sizeof(glm::vec3), &ground_normals[0], GL_STATIC_DRAW);
+
 	// Gen VAO
 	glGenVertexArrays(1, &car_VertexArrayID);
 	glGenVertexArrays(1, &road_VertexArrayID);
@@ -170,6 +189,7 @@ void initVAO() {
 	glGenVertexArrays(1, &tree1_VertexArrayID);
 	glGenVertexArrays(1, &tree2_VertexArrayID);
 	glGenVertexArrays(1, &tree3_VertexArrayID);
+	glGenVertexArrays(1, &ground_VertexArrayID);
 
 	// VAO Binding
 	// Car
@@ -254,6 +274,18 @@ void initVAO() {
 	glBindBuffer(GL_ARRAY_BUFFER, tree3_uvbuffer);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0);
 	glBindBuffer(GL_ARRAY_BUFFER, tree3_normalbuffer);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
+
+	// Ground
+	glBindVertexArray(ground_VertexArrayID);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, ground_vertexbuffer);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
+	glBindBuffer(GL_ARRAY_BUFFER, ground_uvbuffer);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0);
+	glBindBuffer(GL_ARRAY_BUFFER, ground_normalbuffer);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
 
 	glBindVertexArray(0);
