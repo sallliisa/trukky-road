@@ -15,7 +15,7 @@ collision
 bool game = true;
 std::vector<Car> car(1, Car());
 std::vector<Environment> environment(1, Environment(30));
-std::vector<Tree> tree(1, Tree(-180));
+std::vector<Tree> tree(1, Tree(12.0, -180));
 Player player;
 
 
@@ -118,14 +118,14 @@ void handleTree(){
 			// printf("drew tree at %f\n", it -> z);
         } 
         else {
-			WORLD_SPEED += 0.01;
-			WORLD_SPEED = std::clamp(WORLD_SPEED, 0.0f, 1.0f);
 			// printf("WS = %f | CS = %f\n", WORLD_SPEED, CAR_SPEED);
-            it = tree.erase(it);
+            tree.erase(it);
             // tree.insert(it, Tree(-178.8));
-			tree.insert(it, Tree(-180.0));
         }
     }
+	if (frame % 15 == 0) {
+		tree.push_back(Tree(12.0, -180));
+	}
 }
 
 void displayPaint() {
@@ -133,6 +133,7 @@ void displayPaint() {
 	handleCar();
 	player.handleTrug();
 	handleWorld();
+	handleTree();
 }
 
 void display() {
