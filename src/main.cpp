@@ -15,7 +15,7 @@ collision
 bool game = true;
 std::vector<Car> car(1, Car());
 std::vector<Environment> environment(1, Environment(30));
-std::vector<Tree> tree(1, Tree(12.0, -180));
+std::vector<Tree> tree(1, Tree(12, -180));
 Player player;
 
 
@@ -88,7 +88,7 @@ void handleCar(){
 
 void handleWorld(){
 	for(auto it = environment.begin(); it != environment.end();){
-        if (it -> z < 99.6) {
+        if (it -> z < 100) {
             it->draw();
             it->update();
 			// if(it->z == 10) printf("duar");
@@ -124,7 +124,7 @@ void handleTree(){
         }
     }
 	if (frame % 15 == 0) {
-		tree.push_back(Tree(12.0, -180));
+		tree.push_back(Tree(12, -180));
 	}
 }
 
