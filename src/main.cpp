@@ -91,7 +91,7 @@ void handleCar(){
 
 void handleWorld(){
 	for(auto it = environment.begin(); it != environment.end();){
-        if (it -> z < 99.6) {
+        if (it -> z < 100) {
             it->draw();
             it->update();
 			// if(it->z == 10) printf("duar");

@@ -15,8 +15,8 @@ GLuint  programID, matrixID, textureID, lightID, viewMatID, modelMatID;
 
 glm::vec3 lightDir;
 glm::mat4 MVP, VP, model;
-float WORLD_SPEED = 0.1;
-float CAR_SPEED  = 0.1;
+float WORLD_SPEED = 0.4;
+float CAR_SPEED  = 0.6;
 float jump1, jump2, move1, move2;
 int wheel_direction = 0, frame = 0;
 float gravity = 10;
