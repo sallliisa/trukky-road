@@ -15,8 +15,8 @@ GLuint  programID, matrixID, textureID, lightID, viewMatID, modelMatID;
 
 glm::vec3 lightDir;
 glm::mat4 MVP, VP, model;
-float WORLD_SPEED = 1.0;
-float CAR_SPEED  = 1.5;
+float WORLD_SPEED = 0.1;
+float CAR_SPEED  = 0.1;
 float jump1, jump2, move1, move2;
 int wheel_direction = 0, frame = 0;
 float gravity = 10;
@@ -113,7 +113,7 @@ class Player{
 			model = translate * rotate;
 			glBindVertexArray(truck_VertexArrayID);
 			MVP = VP * model;
-			glUniform1i(textureID, 4);
+			glUniform1i(textureID, 7);
 			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 			glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &model[0][0]);
 			glDrawArrays(GL_TRIANGLES, 0, truck_vertices.size());
@@ -183,7 +183,7 @@ class Car {
 		Car() {
 			x = 0, y = 0, z = -180;
             x = -6.5 + (rand() % 3) * 6.5;
-            texId = rand() % 3;
+            texId = rand() % 6;
 		}
 		void draw() {
             model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
@@ -209,7 +209,7 @@ class Environment{
 			// Static objects
 			// Road
 			glBindVertexArray(road_VertexArrayID);
-			glUniform1i(textureID, 3);
+			glUniform1i(textureID, 6);
 			model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, this->z-34));
 			MVP = VP * model;
 			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
@@ -218,7 +218,7 @@ class Environment{
 			
 			// Sideroad
 			glBindVertexArray(sideroad_VertexArrayID);
-			glUniform1i(textureID, 5);
+			glUniform1i(textureID, 8);
 			model = glm::translate(glm::mat4(1.0f), glm::vec3(-12.0f, 0.0f, this->z));
 			MVP = VP * model;
 			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);

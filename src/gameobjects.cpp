@@ -6,7 +6,7 @@
 #include "../common/texture.hpp"
 #include "../common/objloader.hpp"
 
-GLuint  texture0, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8,
+GLuint  texture0, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8, texture9, texture10, texture11,
 		car_vertexbuffer, car_uvbuffer, car_normalbuffer, car_VertexArrayID,
 		road_vertexbuffer, road_uvbuffer, road_normalbuffer, road_VertexArrayID,
 		truck_vertexbuffer, truck_uvbuffer, truck_normalbuffer, truck_VertexArrayID,
@@ -35,12 +35,15 @@ void loadTexture() {
 	texture0 = loadBMP("./res/tex/car_1.bmp");
 	texture1 = loadBMP("./res/tex/car_2.bmp");
 	texture2 = loadBMP("./res/tex/car_3.bmp");
-	texture3 = loadBMP("./res/tex/road.bmp");
-	texture4 = loadBMP("./res/tex/truck.bmp");
-	texture5 = loadBMP("./res/tex/sideroad.bmp");
-	texture6 = loadBMP("./res/tex/tree1.bmp");
-	texture7 = loadBMP("./res/tex/tree2.bmp");
-	texture8 = loadBMP("./res/tex/tree3.bmp");
+    texture3 = loadBMP("./res/tex/car_4.bmp");
+    texture4 = loadBMP("./res/tex/car_5.bmp");
+    texture5 = loadBMP("./res/tex/car_6.bmp");
+	texture6 = loadBMP("./res/tex/road.bmp");
+	texture7 = loadBMP("./res/tex/truck.bmp");
+	texture8 = loadBMP("./res/tex/sideroad.bmp");
+	texture9 = loadBMP("./res/tex/tree1.bmp");
+	texture10 = loadBMP("./res/tex/tree2.bmp");
+	texture11 = loadBMP("./res/tex/tree3.bmp");
 	glBindTextureUnit(0, texture0);
 	glBindTextureUnit(1, texture1);
 	glBindTextureUnit(2, texture2);
@@ -50,6 +53,9 @@ void loadTexture() {
 	glBindTextureUnit(6, texture6);
 	glBindTextureUnit(7, texture7);
 	glBindTextureUnit(8, texture8);
+    glBindTextureUnit(9, texture9);
+    glBindTextureUnit(10, texture10);
+    glBindTextureUnit(11, texture11);
 	printf("loaded all texture\n");
 }
 
