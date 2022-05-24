@@ -49,6 +49,8 @@ void getMatrices(GLFWwindow* window) {
         movSpeed = 3.0f;
     }
 
+    
+
     float fov = initFov;
     glm::vec3 fixedPos = glm::vec3(11.799197, 11.006008, 15.324377);
     glm::vec3 fixedEye = glm::vec3(11.327559, 10.560489, 14.563411);

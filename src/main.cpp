@@ -5,7 +5,6 @@
 #include <GLFW/glfw3.h>
 #include "game.h"
 #include "game.cpp"
-#include <vector>
 using namespace glm;
 /* TODO: 
 player
@@ -77,7 +76,7 @@ void handleCar(){
 			return;
 		} else {
 			// printf("sampe nigga");
-			CAR_SPEED += 0.01;
+			CAR_SPEED += 0.001;
 			// CAR_SPEED = std::clamp(CAR_SPEED, 0.0f, 1.5f);
             car.erase(it);
 			// break;
@@ -85,7 +84,7 @@ void handleCar(){
             // car.insert(it, Car());
         }
     }
-	if (frame % 30 == 0) {
+	if (frame % 20 == 0) {
 		car.push_back(Car());
 	}
 }
@@ -95,14 +94,15 @@ void handleWorld(){
         if (it -> z < 99.6) {
             it->draw();
             it->update();
-			if(it->z == 10) printf("duar");
+			// if(it->z == 10) printf("duar");
 			// printf("%f\n", it->z);
             ++it;
+			// printf("drew environment at %f\n", it -> z);
         } 
         else {
 			WORLD_SPEED += 0.01;
 			WORLD_SPEED = std::clamp(WORLD_SPEED, 0.0f, 1.0f);
-			printf("WS = %f | CS = %f\n", WORLD_SPEED, CAR_SPEED);
+			// printf("WS = %f | CS = %f\n", WORLD_SPEED, CAR_SPEED);
             it = environment.erase(it);
             // environment.insert(it, Environment(-178.8));
 			environment.insert(it, Environment(-180.0));
@@ -143,11 +143,7 @@ int main() {
 	while ((glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) 
 			&& (glfwWindowShouldClose(window) == 0) && game)
 		display();
-	glDeleteBuffers(1, &car_vertexbuffer);
-	glDeleteVertexArrays(1, &car_VertexArrayID);
-	glDeleteBuffers(1, &road_vertexbuffer);
-	glDeleteVertexArrays(1, &road_VertexArrayID);
-	glDeleteProgram(programID);
+	flushBuffers();
 	glDeleteTextures(1, &texture0);
 	glDeleteTextures(1, &texture1);
 	glfwTerminate();
