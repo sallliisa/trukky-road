@@ -146,8 +146,6 @@ int main() {
 			&& (glfwWindowShouldClose(window) == 0))
 		display();
 	flushBuffers();
-	glDeleteTextures(1, &texture0);
-	glDeleteTextures(1, &texture1);
 	glfwTerminate();
 	return 0;
 }
