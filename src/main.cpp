@@ -107,11 +107,16 @@ void handleTree(){
 }
 
 void displayPaint() {
+	if (game) {
+		score += 1;
+		printf("%d\n", score);
+	}
 	handleCar(); // Obstacles
 	player.handleTrug(); // Player
 	// Environment
 	handleWorld();
 	handleTree();
+
 
 	// Ground
 	glBindVertexArray(ground_VertexArrayID);

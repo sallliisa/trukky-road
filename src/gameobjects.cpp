@@ -61,7 +61,6 @@ void loadTexture() {
     glBindTextureUnit(10, texture10);
     glBindTextureUnit(11, texture11);
 	glBindTextureUnit(12, texture12);
-	printf("loaded all texture\n");
 }
 
 void loadOBJ() {

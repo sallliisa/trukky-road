@@ -22,6 +22,7 @@ int wheel_direction = 0,
 	frame = 0;
 float gravity = 10;
 float carspinc = 0.001;
+int score = 0;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
